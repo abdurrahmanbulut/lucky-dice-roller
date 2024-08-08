@@ -11,6 +11,29 @@ Welcome to the Lucky Dice Roller Android App repository! This app provides a fun
 - User-friendly interface with visual dice representation
 - Save and view previous rolls
 
+## Images
+
+<table>
+  <tr>
+    <td><img src="https://github.com/abdurrahmanbulut/lucky-dice-roller/blob/main/app/src/main/java/com/bulut/luckyDiceRoller/images/logo.png" alt="Logo" width="200"/></td>
+    <td><img src="https://github.com/abdurrahmanbulut/lucky-dice-roller/blob/main/app/src/main/java/com/bulut/luckyDiceRoller/images/splash.png" alt="Splash" width="200"/></td>
+    <td><img src="https://github.com/abdurrahmanbulut/lucky-dice-roller/blob/main/app/src/main/java/com/bulut/luckyDiceRoller/images/main.png" alt="Main" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/abdurrahmanbulut/lucky-dice-roller/blob/main/app/src/main/java/com/bulut/luckyDiceRoller/images/main2.png" alt="Main1" width="200"/></td>
+    <td><img src="https://github.com/abdurrahmanbulut/lucky-dice-roller/blob/main/app/src/main/java/com/bulut/luckyDiceRoller/images/main3.png" alt="Main2" width="200"/></td>
+    <td><img src="https://github.com/abdurrahmanbulut/lucky-dice-roller/blob/main/app/src/main/java/com/bulut/luckyDiceRoller/images/main4.png" alt="Main3" width="200"/></td>
+  </tr>
+    <tr>
+    <td><img src="https://github.com/abdurrahmanbulut/lucky-dice-roller/blob/main/app/src/main/java/com/bulut/luckyDiceRoller/images/history.png" alt="History" width="200"/></td>
+    <td><img src="https://github.com/abdurrahmanbulut/lucky-dice-roller/blob/main/app/src/main/java/com/bulut/luckyDiceRoller/images/empty_history.png" alt="Empty History" width="200"/></td>
+    <td><img src="https://github.com/abdurrahmanbulut/lucky-dice-roller/blob/main/app/src/main/java/com/bulut/luckyDiceRoller/images/popup.png" alt="Popup" width="200"/></td>
+  </tr>
+    <tr>
+  </tr>
+  <!-- Continue with other rows as needed -->
+</table>
+
 ## Getting Started
 
 ### Prerequisites
