@@ -10,6 +10,8 @@ Welcome to the Lucky Dice Roller Android App repository! This app provides a fun
 - View results in real-time
 - User-friendly interface with visual dice representation
 - Save and view previous rolls
+## URL to download
+[Play store (close testing)](https://play.google.com/store/apps/details?id=com.bulut.luckyDiceRoller)
 
 ## Images
 
@@ -31,7 +33,6 @@ Welcome to the Lucky Dice Roller Android App repository! This app provides a fun
   </tr>
     <tr>
   </tr>
-  <!-- Continue with other rows as needed -->
 </table>
 
 ## Getting Started
