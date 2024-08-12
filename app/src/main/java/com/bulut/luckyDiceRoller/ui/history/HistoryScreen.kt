@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,7 +41,7 @@ import com.bulut.luckyDiceRoller.constants.LocalizationKeys
 import com.bulut.luckyDiceRoller.constants.get
 import com.bulut.luckyDiceRoller.navigator.LocalInsets
 import com.bulut.luckyDiceRoller.ui.navigator
-import com.bulut.luckyDiceRoller.ui.utils.SingleEvent
+import com.bulut.luckyDiceRoller.ui.utils.HandleEvent
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
@@ -64,13 +63,13 @@ fun Observe(
     dataStore: DataStoreHelper,
 ) {
     val navigator = navigator()
-    SingleEvent(event = viewModel.onBack) {
+    HandleEvent(viewModel.onBack) {
         navigator.pop()
     }
-    SingleEvent(event = viewModel.onPopup) {
+    HandleEvent(viewModel.onPopup) {
         viewModel.showDialog = true
     }
-    SingleEvent(event = viewModel.onClear) {
+    HandleEvent(viewModel.onClear) {
         viewModel.showDialog = false
         dataStore.clearResults()
     }

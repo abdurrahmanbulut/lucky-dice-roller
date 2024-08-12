@@ -58,9 +58,8 @@ import com.bulut.luckyDiceRoller.navigator.screen.Screen
 import com.bulut.luckyDiceRoller.ui.main.MainScreenVM
 import com.bulut.luckyDiceRoller.ui.navigator
 import com.bulut.luckyDiceRoller.ui.theme.drawables
-import com.bulut.luckyDiceRoller.ui.utils.SingleEvent
+import com.bulut.luckyDiceRoller.ui.utils.HandleEvent
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -113,7 +112,7 @@ fun HomeScreen(parentViewModel: MainScreenVM) {
 fun Observe(viewModel: HomeScreenVM) {
     val coroutineScope = rememberCoroutineScope()
     val navigator = navigator()
-    SingleEvent(event = viewModel.onButtonClicked) {
+    HandleEvent(viewModel.onButtonClicked) {
         if (!viewModel.isRolling) {
             viewModel.isRolling = true
             coroutineScope.launch {
@@ -125,7 +124,7 @@ fun Observe(viewModel: HomeScreenVM) {
             }
         }
     }
-    SingleEvent(event = viewModel.navigateToHistory) {
+    HandleEvent(viewModel.navigateToHistory) {
         navigator.navigate(Screen.History.route)
     }
 }

@@ -4,25 +4,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.bulut.luckyDiceRoller.ui.utils.createEvent
-import com.bulut.luckyDiceRoller.ui.utils.triggered
+import com.bulut.luckyDiceRoller.ui.utils.EventHandler
 
 class HistoryScreenVM : ViewModel() {
-    val onBack = createEvent()
-    val onClear = createEvent()
-    val onPopup = createEvent()
+    val onBack = EventHandler<Unit>()
+    val onPopup = EventHandler<Unit>()
+    val onClear = EventHandler<Unit>()
 
     var showDialog by mutableStateOf(false)
 
     fun onBack()  {
-        onBack.value = triggered
+        onBack.trigger()
     }
 
     fun onDelete()  {
-        onPopup.value = triggered
+        onPopup.trigger()
     }
 
     fun delete()  {
-        onClear.value = triggered
+        onClear.trigger()
     }
 }

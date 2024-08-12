@@ -9,12 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bulut.luckyDiceRoller.network.repository.StockRepository
 import com.bulut.luckyDiceRoller.ui.theme.drawables
-import com.bulut.luckyDiceRoller.ui.utils.createEvent
-import com.bulut.luckyDiceRoller.ui.utils.triggered
+import com.bulut.luckyDiceRoller.ui.utils.EventHandler
 
 class HomeScreenVM(private val stockRepository: StockRepository) : ViewModel() {
-    val onButtonClicked = createEvent()
-    val navigateToHistory = createEvent()
+    val onButtonClicked = EventHandler<Unit>()
+    val navigateToHistory = EventHandler<Unit>()
     val test = "Home Screen"
 
     var started by mutableStateOf(false)
@@ -52,7 +51,7 @@ class HomeScreenVM(private val stockRepository: StockRepository) : ViewModel() {
     }
 
     fun onButtonClicked() {
-        onButtonClicked.value = triggered
+        onButtonClicked.trigger()
         openMenu = false
     }
 
@@ -69,6 +68,6 @@ class HomeScreenVM(private val stockRepository: StockRepository) : ViewModel() {
     }
 
     fun onHistory()  {
-        navigateToHistory.value = triggered
+        navigateToHistory.trigger()
     }
 }

@@ -1,187 +1,106 @@
 package com.bulut.luckyDiceRoller.ui.utils
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.mutableStateOf
 
-@Immutable
-sealed interface StateEvent {
-    @Immutable
-    data object Triggered : StateEvent {
-        override fun toString(): String = "triggered"
-    }
-
-    @Immutable
-    data object Consumed : StateEvent {
-        override fun toString(): String = "consumed"
+@Composable
+fun HandleEvent(
+    eventHandler: EventHandler<Unit>,
+    onTriggered: suspend () -> Unit,
+) {
+    LaunchedEffect(eventHandler.state.value) {
+        if (eventHandler.state.value is Event.NoArgTriggered) {
+            onTriggered()
+            eventHandler.consume()
+        }
     }
 }
 
-val triggered = StateEvent.Triggered
-
-val consumed = StateEvent.Consumed
-
-fun createEvent() = mutableStateOf<StateEvent>(consumed)
-
-fun <T> createEventWithContent() = mutableStateOf<StateEventWithContent<T>>(consumed())
-
-fun <T1, T2> createEventWithContent2() = mutableStateOf<StateEventWithContent2<T1, T2>>(consumed2())
-
-fun <T1, T2, T3> createEventWithContent3() = mutableStateOf<StateEventWithContent3<T1, T2, T3>>(consumed3())
-
-fun <T1, T2, T3, T4> createEventWithContent4() = mutableStateOf<StateEventWithContent4<T1, T2, T3, T4>>(consumed4())
-
-@Immutable
-sealed interface StateEventWithContent<out T>
-
-@Immutable
-sealed interface StateEventWithContent2<out T1, out T2>
-
-@Immutable
-sealed interface StateEventWithContent3<out T1, out T2, out T3>
-
-@Immutable
-sealed interface StateEventWithContent4<out T1, out T2, out T3, out T4>
-
-@Immutable
-class StateEventWithContentTriggered<T>(
-    val content: T,
-) : StateEventWithContent<T>
-
-@Immutable
-class StateEventWithContentTriggered2<T1, T2>(
-    val content1: T1,
-    val content2: T2,
-) : StateEventWithContent2<T1, T2>
-
-@Immutable
-class StateEventWithContentTriggered3<T1, T2, T3>(
-    val content1: T1,
-    val content2: T2,
-    val content3: T3,
-) : StateEventWithContent3<T1, T2, T3>
-
-@Immutable
-class StateEventWithContentTriggered4<T1, T2, T3, T4>(
-    val content1: T1,
-    val content2: T2,
-    val content3: T3,
-    val content4: T4,
-) : StateEventWithContent4<T1, T2, T3, T4>
-
-@Immutable
-class StateEventWithContentConsumed<T> : StateEventWithContent<T>
-
-@Immutable
-class StateEventWithContentConsumed2<T1, T2> : StateEventWithContent2<T1, T2>
-
-@Immutable
-class StateEventWithContentConsumed3<T1, T2, T3> : StateEventWithContent3<T1, T2, T3>
-
-@Immutable
-class StateEventWithContentConsumed4<T1, T2, T3, T4> : StateEventWithContent4<T1, T2, T3, T4>
-
-fun <T> triggered(content: T) = StateEventWithContentTriggered(content)
-
-fun <T1, T2> triggered(
-    content1: T1,
-    content2: T2,
-) = StateEventWithContentTriggered2(content1, content2)
-
-fun <T1, T2, T3> triggered(
-    content1: T1,
-    content2: T2,
-    content3: T3,
-) = StateEventWithContentTriggered3(content1, content2, content3)
-
-fun <T1, T2, T3, T4> triggered(
-    content1: T1,
-    content2: T2,
-    content3: T3,
-    content4: T4,
-) = StateEventWithContentTriggered4(content1, content2, content3, content4)
-
-fun <T> consumed() = StateEventWithContentConsumed<T>()
-
-fun <T1, T2> consumed2() = StateEventWithContentConsumed2<T1, T2>()
-
-fun <T1, T2, T3> consumed3() = StateEventWithContentConsumed3<T1, T2, T3>()
-
-fun <T1, T2, T3, T4> consumed4() = StateEventWithContentConsumed4<T1, T2, T3, T4>()
 
 @Composable
-@NonRestartableComposable
-fun SingleEvent(
-    event: MutableState<StateEvent>,
-    action: suspend () -> Unit,
+fun <T> HandleEvent(
+    eventHandler: EventHandler<T>,
+    onTriggered: suspend (T) -> Unit,
 ) {
-    LaunchedEffect(key1 = event.value) {
-        if (event.value is StateEvent.Triggered) {
-            action()
-            event.value = consumed
+    LaunchedEffect(eventHandler.state.value) {
+        if (eventHandler.state.value is Event.OneArgTriggered) {
+            onTriggered((eventHandler.state.value as Event.OneArgTriggered<T>).arg)
+            eventHandler.consume()
         }
     }
 }
 
 @Composable
-@NonRestartableComposable
-fun <T> SingleEvent(
-    event: MutableState<StateEventWithContent<T>>,
-    action: suspend (T) -> Unit,
+fun <T1, T2> HandleEvent(
+    eventHandler: EventHandler<Pair<T1, T2>>,
+    onTriggered: suspend (T1, T2) -> Unit,
 ) {
-    LaunchedEffect(key1 = event.value) {
-        if (event.value is StateEventWithContentTriggered<T>) {
-            val value = event.value as StateEventWithContentTriggered<T>
-            action(value.content)
-            event.value = consumed()
+    LaunchedEffect(eventHandler.state.value) {
+        if (eventHandler.state.value is Event.TwoArgTriggered) {
+            val event = eventHandler.state.value as Event.TwoArgTriggered<T1, T2>
+            onTriggered(event.arg1, event.arg2)
+            eventHandler.consume()
         }
     }
 }
 
 @Composable
-@NonRestartableComposable
-fun <T1, T2> SingleEvent(
-    event: MutableState<StateEventWithContent2<T1, T2>>,
-    action: suspend (T1, T2) -> Unit,
+fun <T1, T2, T3> HandleEvent(
+    eventHandler: EventHandler<Triple<T1, T2, T3>>,
+    onTriggered: suspend (T1, T2, T3) -> Unit,
 ) {
-    LaunchedEffect(key1 = event.value) {
-        if (event.value is StateEventWithContentTriggered2<T1, T2>) {
-            val value = event.value as StateEventWithContentTriggered2<T1, T2>
-            action(value.content1, value.content2)
-            event.value = consumed2()
+    LaunchedEffect(eventHandler.state.value) {
+        if (eventHandler.state.value is Event.ThreeArgTriggered) {
+            val event = eventHandler.state.value as Event.ThreeArgTriggered<T1, T2, T3>
+            onTriggered(event.arg1, event.arg2, event.arg3)
+            eventHandler.consume()
         }
     }
 }
 
-@Composable
-@NonRestartableComposable
-fun <T1, T2, T3> SingleEvent(
-    event: MutableState<StateEventWithContent3<T1, T2, T3>>,
-    action: suspend (T1, T2, T3) -> Unit,
-) {
-    LaunchedEffect(key1 = event.value) {
-        if (event.value is StateEventWithContentTriggered3<T1, T2, T3>) {
-            val value = event.value as StateEventWithContentTriggered3<T1, T2, T3>
-            action(value.content1, value.content2, value.content3)
-            event.value = consumed3()
-        }
+class EventHandler<T> {
+    val state: MutableState<Event<T>> = mutableStateOf(Event.Consumed())
+
+    fun trigger() {
+        state.value = Event.NoArgTriggered()
+    }
+
+    fun trigger(arg: T) {
+        state.value = Event.OneArgTriggered(arg)
+    }
+
+    fun <T1, T2> trigger(
+        arg1: T1,
+        arg2: T2,
+    ) {
+        val event = Event.TwoArgTriggered(arg1, arg2)
+        state.value = event as Event<T>
+    }
+
+    fun <T1, T2, T3> trigger(
+        arg1: T1,
+        arg2: T2,
+        arg3: T3,
+    ) {
+        val event = Event.ThreeArgTriggered(arg1, arg2, arg3)
+        state.value = event as Event<T>
+    }
+
+    fun consume() {
+        state.value = Event.Consumed()
     }
 }
 
-@Composable
-@NonRestartableComposable
-fun <T1, T2, T3, T4> SingleEvent(
-    event: MutableState<StateEventWithContent4<T1, T2, T3, T4>>,
-    action: suspend (T1, T2, T3, T4) -> Unit,
-) {
-    LaunchedEffect(key1 = event.value) {
-        if (event.value is StateEventWithContentTriggered4<T1, T2, T3, T4>) {
-            val value = event.value as StateEventWithContentTriggered4<T1, T2, T3, T4>
-            action(value.content1, value.content2, value.content3, value.content4)
-            event.value = consumed4()
-        }
-    }
+sealed class Event<T> {
+    class NoArgTriggered<T> : Event<T>()
+
+    data class OneArgTriggered<T>(val arg: T) : Event<T>()
+
+    data class TwoArgTriggered<T1, T2>(val arg1: T1, val arg2: T2) : Event<Pair<T1, T2>>()
+
+    data class ThreeArgTriggered<T1, T2, T3>(val arg1: T1, val arg2: T2, val arg3: T3) : Event<Triple<T1, T2, T3>>()
+
+    class Consumed<T> : Event<T>()
 }
