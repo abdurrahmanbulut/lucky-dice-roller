@@ -75,9 +75,9 @@ fun HomeScreen(parentViewModel: MainScreenVM) {
     Observe(viewModel)
     Box(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(top = insets.statusBarHeight),
+        Modifier
+            .fillMaxSize()
+            .padding(top = insets.statusBarHeight + 16.dp),
     ) {
         Content(viewModel)
     }
@@ -156,17 +156,19 @@ fun Content(
             )
         }
     }
-    Column(Modifier.fillMaxSize()) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(
+            Modifier
+                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Box {
                 Image(
                     painter = painterResource(id = if (language == "tr") drawables.tr else drawables.en),
                     contentDescription = null,
                     modifier =
-                        Modifier
-                            .padding(start = 24.dp)
-                            .size(32.dp)
-                            .clickable { expanded = expanded.not() },
+                    Modifier
+                        .padding(start = 24.dp)
+                        .size(32.dp)
+                        .clickable { expanded = expanded.not() },
                 )
                 DropdownMenu(
                     expanded = expanded,
@@ -202,22 +204,23 @@ fun Content(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.Top,
             ) {
-                AnimatedVisibility(visible = viewModel.openMenu) {
-                    CoolStyledNumberBox(Modifier.weight(1f), viewModel)
-                }
+
                 if (viewModel.openMenu.not()) {
                     Spacer(modifier = Modifier.height(100.dp))
                 }
                 LottieAnimation(
                     modifier =
-                        Modifier
-                            .padding(horizontal = 16.dp)
-                            .size(46.dp)
-                            .clickable { viewModel.openMenu = viewModel.openMenu.not() },
+                    Modifier
+                        .padding(horizontal = 16.dp)
+                        .size(46.dp)
+                        .clickable { viewModel.openMenu = viewModel.openMenu.not() },
                     composition = composition,
                     progress = { animationState.progress },
                 )
             }
+        }
+        AnimatedVisibility(visible = viewModel.openMenu) {
+            CoolStyledNumberBox(Modifier, viewModel)
         }
 
         DiceRoll(viewModel)
@@ -235,9 +238,9 @@ fun CoolStyledNumberBox(
 
     Column(
         modifier =
-            modifier
-                .height(100.dp)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier
+            .height(100.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -248,11 +251,11 @@ fun CoolStyledNumberBox(
             numbers.forEach { number ->
                 Box(
                     modifier =
-                        Modifier
-                            .padding(horizontal = 12.dp)
-                            .size(48.dp)
-                            .background(color = boxBackgroundColor, shape = RoundedCornerShape(12.dp))
-                            .clickable { viewModel.chooseNumberOfDice(number) },
+                    Modifier
+                        .padding(horizontal = 6.dp)
+                        .size(48.dp)
+                        .background(color = boxBackgroundColor, shape = RoundedCornerShape(12.dp))
+                        .clickable { viewModel.chooseNumberOfDice(number) },
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
@@ -284,10 +287,10 @@ fun CoolStyledNumberBox(
         numbers.forEach { number ->
             Box(
                 modifier =
-                    Modifier
-                        .padding(horizontal = 12.dp)
-                        .size(36.dp)
-                        .background(color = Color.Black, shape = RoundedCornerShape(12.dp)),
+                Modifier
+                    .padding(horizontal = 12.dp)
+                    .size(36.dp)
+                    .background(color = Color.Black, shape = RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -346,9 +349,9 @@ fun DiceRoll(viewModel: HomeScreenVM) {
             Button(
                 onClick = viewModel::onButtonClicked,
                 modifier =
-                    Modifier
-                        .weight(1f)
-                        .height(60.dp),
+                Modifier
+                    .weight(1f)
+                    .height(60.dp),
                 colors =
                     ButtonColors(
                         contentColor = Color.White,
@@ -409,9 +412,9 @@ fun DiceRoll(viewModel: HomeScreenVM) {
                 painter = painterResource(id = drawables.history),
                 contentDescription = null,
                 modifier =
-                    Modifier
-                        .size(32.dp)
-                        .clickable { viewModel.onHistory() },
+                Modifier
+                    .size(32.dp)
+                    .clickable { viewModel.onHistory() },
                 colorFilter = ColorFilter.tint(Color.Black),
             )
         }
@@ -426,7 +429,7 @@ fun Dice(
     viewModel: HomeScreenVM,
 ) {
     Box(
-        modifier = Modifier.size(if (viewModel.diceCount > 2) 100.dp else 140.dp),
+        modifier = Modifier.size(if (viewModel.diceCount > 3) 76.dp else if (viewModel.diceCount > 2) 100.dp else 140.dp),
         contentAlignment = Alignment.Center,
     ) {
         val resourceId = diceResources.getOrNull(result - 1) ?: diceResources.first()
@@ -434,12 +437,12 @@ fun Dice(
             painter = painterResource(id = if (viewModel.started.not() && viewModel.isRolling.not()) drawables.diceUnknown else resourceId),
             contentDescription = null,
             modifier =
-                Modifier
-                    .size(if (viewModel.diceCount > 2) 80.dp else 120.dp)
-                    .graphicsLayer(
-                        rotationZ = if (viewModel.isRolling) viewModel.rotation.value else 0f,
-                        transformOrigin = TransformOrigin.Center,
-                    ),
+            Modifier
+                .size(if (viewModel.diceCount > 3) 76.dp else if (viewModel.diceCount > 2) 80.dp else 120.dp)
+                .graphicsLayer(
+                    rotationZ = if (viewModel.isRolling) viewModel.rotation.value else 0f,
+                    transformOrigin = TransformOrigin.Center,
+                ),
         )
     }
 }

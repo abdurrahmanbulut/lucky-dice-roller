@@ -2,6 +2,7 @@ package com.bulut.luckyDiceRoller.ui.history
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -84,11 +85,12 @@ fun Content(
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.back))
     val composition2 by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.delete))
     val composition3 by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty))
+    val isDarkTheme = isSystemInDarkTheme()
 
     Column(
         Modifier
             .fillMaxSize()
-            .padding(top = insets.statusBarHeight, start = 16.dp, end = 16.dp),
+            .padding(top = insets.statusBarHeight + 16.dp, start = 16.dp, end = 16.dp),
     ) {
         Row(
             Modifier
@@ -101,7 +103,7 @@ fun Content(
                     Modifier
                         .size(46.dp)
                         .clickable { viewModel.onBack() },
-                composition = composition,
+                composition = composition
             )
             Row(Modifier.weight(1f), horizontalArrangement = Arrangement.Center) {
                 Text(text = get(LocalizationKeys.DICE_HISTORY), style = TextStyle.Default.copy(fontSize = 24.sp))
@@ -154,12 +156,12 @@ fun Content(
                                     modifier =
                                         Modifier
                                             .background(
-                                                color = Color.LightGray,
+                                                color = if (isDarkTheme) Color.White else Color.Black,
                                                 shape = RoundedCornerShape(4.dp),
                                             )
                                             .padding(8.dp),
                                 ) {
-                                    Text(text = number.toString(), fontWeight = FontWeight.Bold)
+                                    Text(text = number.toString(), fontWeight = FontWeight.Bold, color = if (isDarkTheme) Color.Black else Color.White)
                                 }
                                 Spacer(modifier = Modifier.height(8.dp))
                             }
