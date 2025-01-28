@@ -23,7 +23,8 @@ fun SplashScreen() {
 
     LaunchedEffect(Unit) {
         delay(1500)
-        navigator.popAllAndNavigate(Screen.Main.route)
+        navigator.pop()
+        navigator.navigate(Screen.Main.route)
     }
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Content()

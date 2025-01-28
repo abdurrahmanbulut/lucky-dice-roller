@@ -23,15 +23,7 @@ internal val LocalNavHostController =
 
 @Composable
 @ReadOnlyComposable
-internal fun coreActivity() = LocalMainActivity.current
-
-@Composable
-@ReadOnlyComposable
 internal fun navigator() = LocalNavigator.current
-
-@Composable
-@ReadOnlyComposable
-internal fun navHostController() = LocalNavHostController.current
 
 class MainActivity : ComponentActivity() {
     private lateinit var navigator: Navigator

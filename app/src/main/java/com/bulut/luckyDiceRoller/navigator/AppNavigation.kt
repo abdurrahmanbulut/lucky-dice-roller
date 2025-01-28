@@ -23,9 +23,7 @@ fun AppNavigation(navHostController: NavHostController) {
     insets.statusBarHeight = systemBarsPadding.calculateTopPadding()
     insets.navigationBarHeight = systemBarsPadding.calculateBottomPadding()
 
-    CompositionLocalProvider(
-        LocalInsets provides insets,
-    ) {
+    CompositionLocalProvider(LocalInsets provides insets) {
         NavHost(
             navController = navHostController,
             startDestination = Screen.Splash.route,
