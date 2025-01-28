@@ -51,8 +51,6 @@ fun HistoryScreen() {
     val viewModel: HistoryScreenVM = koinViewModel()
     val dataStore: DataStoreHelper = koinInject()
     val results by dataStore.resultsFlow.collectAsState(initial = emptyList())
-    println(results)
-    println(results.size)
     Observe(viewModel, dataStore)
     Content(viewModel, results)
     MyPopup(viewModel)
@@ -134,8 +132,7 @@ fun Content(
                     modifier =
                         Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 24.dp, vertical = 36.dp)
-                            .clickable { viewModel.onBack() },
+                            .padding(horizontal = 24.dp, vertical = 36.dp),
                     composition = composition3,
                 )
             } else
