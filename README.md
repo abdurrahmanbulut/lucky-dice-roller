@@ -1,8 +1,8 @@
-# Lucky Dice Roller Android App
+# Roll Dice Android App
 
 ## Overview
 
-Welcome to the Lucky Dice Roller Android App repository! This app provides a fun and interactive way to roll dice, where you can customize the number of dice and their sides. Built using Android and Kotlin, this app brings luck to your fingertips!
+Welcome to the Roll Dice Android App repository! This app provides a fun and interactive way to roll dice, where you can customize the number of dice and their sides. Built using Android and Kotlin, this app brings luck to your fingertips!
 
 ## Features Planned to Add
 
