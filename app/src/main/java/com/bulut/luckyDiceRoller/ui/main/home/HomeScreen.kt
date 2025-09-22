@@ -60,7 +60,6 @@ import com.bulut.luckyDiceRoller.constants.language
 import com.bulut.luckyDiceRoller.constants.switchLanguage
 import com.bulut.luckyDiceRoller.navigator.LocalInsets
 import com.bulut.luckyDiceRoller.navigator.screen.Screen
-import com.bulut.luckyDiceRoller.ui.main.MainScreenVM
 import com.bulut.luckyDiceRoller.ui.navigator
 import com.bulut.luckyDiceRoller.ui.theme.drawables
 import com.bulut.luckyDiceRoller.ui.utils.HandleEvent
@@ -72,7 +71,7 @@ import org.koin.compose.koinInject
 import kotlin.random.Random
 
 @Composable
-fun HomeScreen(parentViewModel: MainScreenVM) {
+fun HomeScreen() {
     val viewModel: HomeScreenVM = koinViewModel()
     val insets = LocalInsets.current
     val datastore: DataStoreHelper = koinInject()
@@ -80,9 +79,9 @@ fun HomeScreen(parentViewModel: MainScreenVM) {
     Observe(viewModel)
     Box(
         modifier =
-        Modifier
-            .fillMaxSize()
-            .padding(top = insets.statusBarHeight + 16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(top = insets.statusBarHeight + 16.dp),
     ) {
         Content(viewModel)
     }
@@ -167,16 +166,17 @@ fun Content(
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             Modifier
-                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Box {
                 Image(
                     painter = painterResource(id = if (language == "tr") drawables.tr else drawables.en),
                     contentDescription = null,
                     modifier =
-                    Modifier
-                        .padding(start = 24.dp)
-                        .size(32.dp)
-                        .clickable { expanded = expanded.not() },
+                        Modifier
+                            .padding(start = 24.dp)
+                            .size(32.dp)
+                            .clickable { expanded = expanded.not() },
                 )
                 DropdownMenu(
                     expanded = expanded,
@@ -219,10 +219,10 @@ fun Content(
 
                 LottieAnimation(
                     modifier =
-                    Modifier
-                        .padding(horizontal = 16.dp)
-                        .size(46.dp)
-                        .clickable { viewModel.openMenu = viewModel.openMenu.not() },
+                        Modifier
+                            .padding(horizontal = 16.dp)
+                            .size(46.dp)
+                            .clickable { viewModel.openMenu = viewModel.openMenu.not() },
                     composition = composition,
                     progress = { animationState.progress },
                     dynamicProperties = rememberLottieDynamicProperties(
@@ -258,9 +258,9 @@ fun CoolStyledNumberBox(
 
     Column(
         modifier =
-        modifier
-            .height(100.dp)
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier
+                .height(100.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -271,11 +271,11 @@ fun CoolStyledNumberBox(
             numbers.forEach { number ->
                 Box(
                     modifier =
-                    Modifier
-                        .padding(horizontal = 6.dp)
-                        .size(48.dp)
-                        .background(color = boxBackgroundColor, shape = RoundedCornerShape(12.dp))
-                        .clickable { viewModel.chooseNumberOfDice(number) },
+                        Modifier
+                            .padding(horizontal = 6.dp)
+                            .size(48.dp)
+                            .background(color = boxBackgroundColor, shape = RoundedCornerShape(12.dp))
+                            .clickable { viewModel.chooseNumberOfDice(number) },
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
@@ -309,10 +309,10 @@ fun CoolStyledNumberBox(
         numbers.forEach { number ->
             Box(
                 modifier =
-                Modifier
-                    .padding(horizontal = 12.dp)
-                    .size(36.dp)
-                    .background(color = boxBackgroundColor, shape = RoundedCornerShape(12.dp)),
+                    Modifier
+                        .padding(horizontal = 12.dp)
+                        .size(36.dp)
+                        .background(color = boxBackgroundColor, shape = RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -376,9 +376,9 @@ fun DiceRoll(viewModel: HomeScreenVM) {
             Button(
                 onClick = viewModel::onButtonClicked,
                 modifier =
-                Modifier
-                    .weight(1f)
-                    .height(60.dp),
+                    Modifier
+                        .weight(1f)
+                        .height(60.dp),
                 colors =
                     ButtonColors(
                         contentColor = textColor,
@@ -397,7 +397,7 @@ fun DiceRoll(viewModel: HomeScreenVM) {
                         } else {
                             get(LocalizationKeys.ROLL_DICE)
                         },
-                    color = ColorProducer { textColor},
+                    color = ColorProducer { textColor },
                     style = TextStyle.Default.copy(fontSize = 24.sp),
                 )
             }
@@ -439,9 +439,9 @@ fun DiceRoll(viewModel: HomeScreenVM) {
                 painter = painterResource(id = drawables.history),
                 contentDescription = null,
                 modifier =
-                Modifier
-                    .size(32.dp)
-                    .clickable { viewModel.onHistory() },
+                    Modifier
+                        .size(32.dp)
+                        .clickable { viewModel.onHistory() },
                 colorFilter = ColorFilter.tint(boxBackgroundColor),
             )
         }
@@ -464,12 +464,12 @@ fun Dice(
             painter = painterResource(id = if (viewModel.started.not() && viewModel.isRolling.not()) drawables.diceUnknown else resourceId),
             contentDescription = null,
             modifier =
-            Modifier
-                .size(if (viewModel.diceCount > 3) 76.dp else if (viewModel.diceCount > 2) 80.dp else 120.dp)
-                .graphicsLayer(
-                    rotationZ = if (viewModel.isRolling) viewModel.rotation.value else 0f,
-                    transformOrigin = TransformOrigin.Center,
-                ),
+                Modifier
+                    .size(if (viewModel.diceCount > 3) 76.dp else if (viewModel.diceCount > 2) 80.dp else 120.dp)
+                    .graphicsLayer(
+                        rotationZ = if (viewModel.isRolling) viewModel.rotation.value else 0f,
+                        transformOrigin = TransformOrigin.Center,
+                    ),
         )
     }
 }
