@@ -16,8 +16,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,15 +31,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.airbnb.lottie.compose.rememberLottieDynamicProperties
+import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.bulut.luckyDiceRoller.R
 import com.bulut.luckyDiceRoller.constants.DataStoreHelper
 import com.bulut.luckyDiceRoller.constants.LocalizationKeys
@@ -80,10 +88,10 @@ fun Content(
     results: List<List<Int>>,
 ) {
     val insets = LocalInsets.current
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.back))
     val composition2 by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.delete))
     val composition3 by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty))
     val isDarkTheme = isSystemInDarkTheme()
+    val boxBackgroundColor = if (isDarkTheme) Color.White else Color.Black
 
     Column(
         Modifier
@@ -96,13 +104,19 @@ fun Content(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            LottieAnimation(
-                modifier =
-                    Modifier
-                        .size(46.dp)
-                        .clickable { viewModel.onBack() },
-                composition = composition
-            )
+
+            IconButton(
+                onClick = { viewModel.onBack() },
+                modifier = Modifier.size(46.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = boxBackgroundColor,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+
             Row(Modifier.weight(1f), horizontalArrangement = Arrangement.Center) {
                 Text(text = get(LocalizationKeys.DICE_HISTORY), style = TextStyle.Default.copy(fontSize = 24.sp))
             }
@@ -113,6 +127,15 @@ fun Content(
                             .size(46.dp)
                             .clickable { viewModel.onDelete() },
                     composition = composition2,
+                    dynamicProperties = rememberLottieDynamicProperties(
+                        properties = arrayOf(
+                            rememberLottieDynamicProperty(
+                                property = LottieProperty.COLOR,
+                                value = boxBackgroundColor.toArgb(),
+                                keyPath = arrayOf("**")
+                            )
+                        )
+                    )
                 )
             } else {
                 Box(
@@ -126,71 +149,75 @@ fun Content(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        if (results.isEmpty())
-            {
-                LottieAnimation(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 24.dp, vertical = 36.dp),
-                    composition = composition3,
-                )
-            } else
-            {
-                Column(
+        if (results.isEmpty()) {
+            LottieAnimation(
+                modifier =
                     Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(rememberScrollState()),
-                ) {
-                    results.reversed().forEachIndexed { index, result ->
-                        Row(
-                            modifier = Modifier.padding(horizontal = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        ) {
-                            result.forEach { number ->
-                                Box(
-                                    modifier =
-                                        Modifier
-                                            .background(
-                                                color = if (isDarkTheme) Color.White else Color.Black,
-                                                shape = RoundedCornerShape(4.dp),
-                                            )
-                                            .padding(8.dp),
-                                ) {
-                                    Text(text = number.toString(), fontWeight = FontWeight.Bold, color = if (isDarkTheme) Color.Black else Color.White)
-                                }
-                                Spacer(modifier = Modifier.height(8.dp))
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp, vertical = 36.dp),
+                composition = composition3,
+            )
+        } else {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                results.reversed().forEachIndexed { index, result ->
+                    Row(
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        result.forEach { number ->
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .background(
+                                            color = if (isDarkTheme) Color.White else Color.Black,
+                                            shape = RoundedCornerShape(4.dp),
+                                        )
+                                        .padding(8.dp),
+                            ) {
+                                Text(text = number.toString(), fontWeight = FontWeight.Bold, color = if (isDarkTheme) Color.Black else Color.White)
                             }
-                            if (index == 0) {
-                                Spacer(modifier = Modifier.weight(1f))
-                                Text(
-                                    text = get(LocalizationKeys.LAST_DICE),
-                                    style = TextStyle.Default.copy(fontSize = 16.sp),
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                            }
+                            Spacer(modifier = Modifier.height(8.dp))
                         }
-                        Spacer(modifier = Modifier.height(12.dp))
+                        if (index == 0) {
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                text = get(LocalizationKeys.LAST_DICE),
+                                style = TextStyle.Default.copy(fontSize = 16.sp),
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
                     }
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
+        }
     }
 }
 
 @Composable
 fun MyPopup(viewModel: HistoryScreenVM) {
+
+    val isDarkTheme = isSystemInDarkTheme()
+    val textColor = if (isDarkTheme) Color.Black else Color.White
+    val boxBackgroundColor = if (isDarkTheme) Color.White else Color.Black
+
     if (viewModel.showDialog) {
         Dialog(onDismissRequest = { viewModel.showDialog = false }) {
             Surface(
                 shape = MaterialTheme.shapes.medium,
+                color = boxBackgroundColor
             ) {
                 Column(
                     modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text(text = get(LocalizationKeys.DELETE_POPUP_INFO))
+                    Text(text = get(LocalizationKeys.DELETE_POPUP_INFO), color = textColor)
                     Spacer(modifier = Modifier.height(24.dp))
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -199,8 +226,8 @@ fun MyPopup(viewModel: HistoryScreenVM) {
                             onClick = viewModel::delete,
                             colors =
                                 ButtonColors(
-                                    contentColor = Color.White,
-                                    containerColor = Color.Black,
+                                    contentColor = textColor,
+                                    containerColor = boxBackgroundColor,
                                     disabledContentColor = Color.White,
                                     disabledContainerColor = Color.DarkGray,
                                 ),
@@ -211,8 +238,8 @@ fun MyPopup(viewModel: HistoryScreenVM) {
                             onClick = { viewModel.showDialog = false },
                             colors =
                                 ButtonColors(
-                                    contentColor = Color.White,
-                                    containerColor = Color.Black,
+                                    contentColor = textColor,
+                                    containerColor = boxBackgroundColor,
                                     disabledContentColor = Color.White,
                                     disabledContainerColor = Color.DarkGray,
                                 ),

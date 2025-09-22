@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,16 +38,20 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorProducer
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieAnimatable
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.airbnb.lottie.compose.rememberLottieDynamicProperties
+import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.bulut.luckyDiceRoller.R
 import com.bulut.luckyDiceRoller.constants.DataStoreHelper
 import com.bulut.luckyDiceRoller.constants.LocalizationKeys
@@ -134,6 +139,9 @@ fun Content(
     viewModel: HomeScreenVM,
     dataStoreHelper: DataStoreHelper = koinInject(),
 ) {
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+    val boxBackgroundColor = if (isSystemInDarkTheme) Color.White else Color.Black
+
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.menu))
     val animationState = rememberLottieAnimatable()
     var expanded by remember { mutableStateOf(false) }
@@ -208,6 +216,7 @@ fun Content(
                 if (viewModel.openMenu.not()) {
                     Spacer(modifier = Modifier.height(100.dp))
                 }
+
                 LottieAnimation(
                     modifier =
                     Modifier
@@ -216,6 +225,15 @@ fun Content(
                         .clickable { viewModel.openMenu = viewModel.openMenu.not() },
                     composition = composition,
                     progress = { animationState.progress },
+                    dynamicProperties = rememberLottieDynamicProperties(
+                        properties = arrayOf(
+                            rememberLottieDynamicProperty(
+                                property = LottieProperty.COLOR,
+                                value = boxBackgroundColor.toArgb(),
+                                keyPath = arrayOf("**")
+                            )
+                        )
+                    )
                 )
             }
         }
@@ -233,8 +251,10 @@ fun CoolStyledNumberBox(
     viewModel: HomeScreenVM,
 ) {
     val numbers = listOf(1, 2, 3, 4)
-    val boxBackgroundColor = Color.Black
-    val textColor = Color.White
+
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+    val boxBackgroundColor = if (isSystemInDarkTheme) Color.White else Color.Black
+    val textColor = if (isSystemInDarkTheme) Color.Black else Color.White
 
     Column(
         modifier =
@@ -277,7 +297,9 @@ fun CoolStyledNumberBox(
     numbers: List<Int>,
     viewModel: HomeScreenVM,
 ) {
-    val textColor = Color.White
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+    val textColor = if (isSystemInDarkTheme) Color.Black else Color.White
+    val boxBackgroundColor = if (isSystemInDarkTheme) Color.White else Color.Black
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -290,7 +312,7 @@ fun CoolStyledNumberBox(
                 Modifier
                     .padding(horizontal = 12.dp)
                     .size(36.dp)
-                    .background(color = Color.Black, shape = RoundedCornerShape(12.dp)),
+                    .background(color = boxBackgroundColor, shape = RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -306,6 +328,11 @@ fun CoolStyledNumberBox(
 
 @Composable
 fun DiceRoll(viewModel: HomeScreenVM) {
+
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+    val textColor = if (isSystemInDarkTheme) Color.Black else Color.White
+    val boxBackgroundColor = if (isSystemInDarkTheme) Color.White else Color.Black
+
     LaunchedEffect(viewModel.isRolling) {
         if (viewModel.isRolling) {
             viewModel.rotation.snapTo(viewModel.rotation.value)
@@ -354,8 +381,8 @@ fun DiceRoll(viewModel: HomeScreenVM) {
                     .height(60.dp),
                 colors =
                     ButtonColors(
-                        contentColor = Color.White,
-                        containerColor = Color.Black,
+                        contentColor = textColor,
+                        containerColor = boxBackgroundColor,
                         disabledContentColor = Color.White,
                         disabledContainerColor = Color.DarkGray,
                     ),
@@ -370,7 +397,7 @@ fun DiceRoll(viewModel: HomeScreenVM) {
                         } else {
                             get(LocalizationKeys.ROLL_DICE)
                         },
-                    color = ColorProducer { Color.White },
+                    color = ColorProducer { textColor},
                     style = TextStyle.Default.copy(fontSize = 24.sp),
                 )
             }
@@ -382,8 +409,8 @@ fun DiceRoll(viewModel: HomeScreenVM) {
                         modifier = Modifier.height(60.dp),
                         colors =
                             ButtonColors(
-                                contentColor = Color.White,
-                                containerColor = Color.Black,
+                                contentColor = textColor,
+                                containerColor = boxBackgroundColor,
                                 disabledContentColor = Color.White,
                                 disabledContainerColor = Color.DarkGray,
                             ),
@@ -391,7 +418,7 @@ fun DiceRoll(viewModel: HomeScreenVM) {
                     ) {
                         BasicText(
                             text = get(LocalizationKeys.DELETE),
-                            color = ColorProducer { Color.White },
+                            color = ColorProducer { textColor },
                             style = TextStyle.Default.copy(fontSize = 24.sp),
                         )
                     }
@@ -415,7 +442,7 @@ fun DiceRoll(viewModel: HomeScreenVM) {
                 Modifier
                     .size(32.dp)
                     .clickable { viewModel.onHistory() },
-                colorFilter = ColorFilter.tint(Color.Black),
+                colorFilter = ColorFilter.tint(boxBackgroundColor),
             )
         }
         Spacer(modifier = Modifier.height(32.dp))
